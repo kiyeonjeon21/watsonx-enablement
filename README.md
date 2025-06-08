@@ -61,3 +61,12 @@ python run_deploy_prompt_template.py
 ```
 - 배포된 프롬프트 템플릿 기반 LLM 호출
 - RAG 데이터셋 기반 질의응답 기능 구현
+
+### 문서 기반 질의응답 예제
+- PDF 문서 기반 질의응답 기능 구현
+- 예제 문서: data/2024 Academy Awards Summary.PDF
+
+샘플 질문:
+- "Who won Best Actor?" - 문서 내 실제 수상자 정보 확인
+- "How many awards did Oppenheimer win?" - 특정 영화의 수상 내역 집계
+- "Who won the award for brand new superstar?" - 존재하지 않는 상에 대한 질문 예시 (잘못된 질문)
