@@ -309,7 +309,7 @@ if __name__ == "__main__":
     # Create sample data if it doesn't exist
     if not sample_data_path.exists():
         print("\nCreating sample dataset...")
-        from create_sample_dataset import create_sample_data
+        from utils.create_sample_dataset import create_sample_data
         create_sample_data(str(sample_data_path))
     
     # Example usage
