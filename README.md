@@ -1,72 +1,194 @@
 # watsonx-enablement
 
-## 환경 설정
+A comprehensive toolkit for IBM watsonx.ai development, featuring modular RAG pipelines, AI service deployments, and SDK implementations.
 
-1. Python 가상환경 생성
-```bash
-python -m venv .venv
+## 📁 Project Structure
+
+```
+watsonx-enablement/
+├── api/           # API runners and testing utilities
+├── data/          # Sample datasets and test files
+├── deploy/        # Production-ready AI service deployments
+├── doc/           # Documentation and guides
+├── pipeline/      # Modular RAG pipeline implementation
+├── sdk/           # Basic SDK functions (WIP)
+└── utils/         # Utility scripts and helpers
 ```
 
-2. 필요한 패키지 설치
+## 🚀 Quick Start
+
+### 1. Environment Setup
+
+**Create Python Virtual Environment**
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+**Install Dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. 환경변수 설정
-`.env.copy` 파일을 `.env`로 복사한 후, 아래 값들을 본인의 환경에 맞게 수정하세요:
+**Configure Environment Variables**
+Copy `.env.copy` to `.env` and update with your IBM Cloud credentials:
 ```env
-API_KEY=your_ibm_cloud_api_key
-PROJECT_ID=your_watsonx_project_id
-WATSONX_URL=your_watsonx_url
+# IBM Cloud Configuration
+API_KEY=your_ibm_cloud_api_key          # IBM Cloud API Key
+PROJECT_ID=your_watsonx_project_id      # watsonx.ai Project ID
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
+SPACE_ID=your_deployment_space_id       # IBM Cloud Deployment Space ID
+
+# Milvus Vector Database Configuration
+MILVUS_HOST=localhost                   # Milvus server host address
+MILVUS_PORT=19530                       # Milvus server port
+MILVUS_USERNAME=root                    # Milvus username (if authentication enabled)
+MILVUS_PASSWORD=milvus                  # Milvus password (if authentication enabled)
 ```
 
-## RAG 데이터셋 준비
+### 2. Data Preparation
 
-1. Hugging Face 데이터셋 다운로드
+**Download RAG Dataset**
 ```bash
-git clone https://huggingface.co/datasets/neural-bridge/rag-dataset-1200
+# Option 1: From Hugging Face
+git clone https://huggingface.co/datasets/neural-bridge/rag-dataset-1200 data/rag-dataset-1200
+
+# Option 2: Convert from Parquet (if needed)
+python utils/convert_parquet_to_csv.py
 ```
 
-2. 데이터 형식 변환
+## 🔧 Core Components
+
+### 🚀 Deploy - Production AI Services
+
+Ready-to-deploy AI service implementations:
+
+- **RAG Services**: `aiservice_rag_milvus.py`, `aiservice_rag_inmemory.py`
+- **Agent Services**: `aiservice_agent_basic.py`
+- **Model Functions**: Embedding, reranking, and statistical models
+- **Monitoring**: `endpoint_monitor.py`
+
+**Usage:**
 ```bash
-python convert_parquet_to_csv.py
+python deploy/aiservice_rag_milvus.py      # Milvus-based RAG
+python deploy/aiservice_rag_inmemory.py    # In-memory RAG
+python deploy/aiservice_agent_basic.py     # Basic AI agent
 ```
 
-## watsonx.ai 기능
+### 🔄 Pipeline - Modular RAG Implementation
 
-### 프롬프트 템플릿 관리
+Step-by-step RAG pipeline with clear separation of concerns:
+
+1. **01_initialize.py** - Pipeline initialization
+2. **02_validate_parameters.py** - Input validation
+3. **03_process_query_embedding.py** - Query embedding
+4. **04_search_vector_database.py** - Vector search
+5. **05_rerank_results.py** - Result reranking
+6. **06_generate_response.py** - Response generation
+7. **07_save_final_results.py** - Result persistence
+
+**Usage:**
 ```bash
-python prompt_template_manager.py 
-```
-- 프로젝트에 프롬프트 템플릿 등록 및 배포
-- 대출 상담 시나리오 템플릿 예제 포함
+# Run complete pipeline
+python pipeline/full-pipeline.py
 
-### 프로젝트 기반 LLM API 호출
+# Run individual steps
+python pipeline/01_initialize.py
+# ... continue with other steps
+```
+
+### 🌐 API - Testing and Integration
+
+API runners and testing utilities:
+
+- **Project Templates**: `run_project_prompt_template.py`, `run_project_chat_template.py`
+- **Deployment Testing**: `run_deploy_prompt_template.py`, `test_deployed_function.py`
+
+**Usage:**
 ```bash
-python run_project_prompt_template.py
-```
-- 프로젝트에 등록된 프롬프트 템플릿으로 LLM 호출
-- 일반 호출 및 스트리밍 방식 지원
+# Test project-based prompt templates
+python api/run_project_prompt_template.py
 
-### 프로젝트 기반 Chat API 호출
+# Test chat templates
+python api/run_project_chat_template.py
+
+# Test deployed functions
+python api/test_deployed_function.py
+```
+
+### 🛠️ SDK - Development Tools
+
+Basic SDK implementations for common operations:
+
+- **Text Generation**: `generate_basic.py`
+- **Embeddings**: `generate_embedding.py`
+- **Chat**: `chat_basic_with_langchain.py`
+- **Vector DB**: `milvus_basic.py`, `milvus_ingestion.py`
+
+**Usage:**
 ```bash
-python run_project_chat_template.py
+python sdk/generate_basic.py        # Basic text generation
+python sdk/generate_embedding.py    # Generate embeddings
+python sdk/milvus_basic.py          # Milvus operations
 ```
-- Chat API를 활용한 대화형 LLM 인터페이스
-- 일반 호출 및 스트리밍 방식 지원
 
-### 배포 공간 기반 LLM API 호출
+### 🔧 Utils - Helper Scripts
+
+Utility scripts for data processing and project management:
+
+- **Data Processing**: `cleanup_software_specs.py`, `create_sample_dataset.py`
+- **Metrics**: `custom_metric.py`
+- **Conversion**: `convert_parquet_to_csv.py`
+
+**Usage:**
 ```bash
-python run_deploy_prompt_template.py
+python utils/create_sample_dataset.py    # Create sample data
+python utils/cleanup_software_specs.py   # Clean specifications
+python utils/convert_parquet_to_csv.py   # Convert data formats
 ```
-- 배포된 프롬프트 템플릿 기반 LLM 호출
-- RAG 데이터셋 기반 질의응답 기능 구현
 
-### 문서 기반 질의응답 예제
-- PDF 문서 기반 질의응답 기능 구현
-- 예제 문서: data/2024 Academy Awards Summary.PDF
+## 💾 Data
 
-샘플 질문:
-- "Who won Best Actor?" - 문서 내 실제 수상자 정보 확인
-- "How many awards did Oppenheimer win?" - 특정 영화의 수상 내역 집계
-- "Who won the award for brand new superstar?" - 존재하지 않는 상에 대한 질문 예시 (잘못된 질문)
+Sample datasets and test files for development:
+
+- **Dialogue Data**: `sample_dialogue_data.csv`
+- **RAG Datasets**: Training and test sets for RAG evaluation
+- **Multimodal**: Sample images (`multimodal01-03.jpeg`)
+- **Documents**: PDF files for document QA testing
+
+> **Note**: Large dataset files are excluded from version control. Download separately using the data preparation steps above.
+
+## 🧪 Sample Questions
+
+Test the system with these sample queries:
+
+**Document QA (Academy Awards PDF):**
+- "Who won Best Actor?"
+- "How many awards did Oppenheimer win?"
+- "List all the winners in major categories"
+
+**RAG Dataset Queries:**
+- Technical questions from the RAG dataset
+- Multi-turn conversations
+- Domain-specific queries
+
+## 🔍 Development Status
+
+- ✅ **Deploy**: Production-ready AI services
+- ✅ **Pipeline**: Complete modular RAG implementation
+- ✅ **API**: Testing and integration utilities
+- ✅ **Utils**: Data processing helpers
+- 🚧 **SDK**: Basic implementations (Work in Progress)
+- 📚 **Documentation**: Comprehensive guides available in `/doc`
+
+## 🤝 Contributing
+
+1. Follow the modular structure when adding new components
+2. Place production code in `/deploy`
+3. Use `/pipeline` for step-by-step processing logic
+4. Add utilities to `/utils`
+5. Update this README when adding new features
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
